@@ -9,7 +9,7 @@ import 'rating_badge.dart';
 // Opens the Details screen and remembers the movie as "recently viewed".
 void openMovie(BuildContext context, Movie movie) {
   context.read<MovieProvider>().markViewed(movie.id);
-  Navigator.pushNamed(context, '/details', arguments: movie);
+    Navigator.pushNamed(context, '/movie/${movie.id}');
 }
 
 // Reusable movie card: fade-in on load, zoom on mouse hover, heart if favorite.
