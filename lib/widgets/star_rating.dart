@@ -27,12 +27,13 @@ class StarRating extends StatelessWidget {
 
 // A tappable 5-star picker that works inside a Form (has a validator).
 class StarPicker extends FormField<int> {
-  StarPicker({
+   StarPicker({
     super.key,
     super.validator,
+    int initial = 0,
     required ValueChanged<int> onChanged,
   }) : super(
-          initialValue: 0,
+          initialValue: initial,
           builder: (state) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
