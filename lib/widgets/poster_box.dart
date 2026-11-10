@@ -26,7 +26,7 @@ class PosterBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final art = _PosterArt(movie: movie, compact: compact, showTitle: showTitle);
-    final url = movie.posterUrl.trim();
+    final url = resolvePosterUrl(movie);
 
     final Widget content = (url.isEmpty || compact)
         ? art
