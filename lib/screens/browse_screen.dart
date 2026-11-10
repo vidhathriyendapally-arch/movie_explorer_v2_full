@@ -54,7 +54,7 @@ class _BrowseScreenState extends State<BrowseScreen> {
                 controller: _search,
                 onChanged: p.setQuery,
                 decoration: AppTheme.inputDeco(
-                  'Search movies',
+                                    'Search title, director or cast',
                   icon: Icons.search,
                   suffix: p.query.isEmpty
                       ? null
