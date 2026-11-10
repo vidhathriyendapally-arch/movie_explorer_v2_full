@@ -4,10 +4,14 @@ import '../models/movie.dart';
 import '../providers/movie_provider.dart';
 import '../theme/app_theme.dart';
 import '../widgets/star_rating.dart';
+import 'not_found_screen.dart';
 
+// Used for writing a new review AND editing your own (reviewId != null).
 // StatefulWidget because the form uses controllers and local state.
 class ReviewScreen extends StatefulWidget {
-  const ReviewScreen({super.key});
+  final int movieId;
+  final String? reviewId;
+  const ReviewScreen({super.key, required this.movieId, this.reviewId});
 
   @override
   State<ReviewScreen> createState() => _ReviewScreenState();
@@ -16,17 +20,27 @@ class ReviewScreen extends StatefulWidget {
 class _ReviewScreenState extends State<ReviewScreen> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
-  final _commentController = TextEditingController();
+  late final TextEditingController _commentController;
   int _stars = 0;
   bool _recommends = true;
+  Review? _existing;
+  bool _blocked = false; // review missing, or it belongs to someone else
 
   @override
   void initState() {
     super.initState();
-    // Pre-fill the name if the user is logged in.
     final p = context.read<MovieProvider>();
-    _nameController =
-        TextEditingController(text: p.userEmail.isEmpty ? '' : p.userName);
+    if (widget.reviewId != null) {
+      _existing = p.reviewById(widget.reviewId!);
+      if (_existing == null || !p.isMine(_existing!)) _blocked = true;
+    }
+    final r = _existing;
+    // Pre-fill the name if the user is logged in (or from the review being edited).
+    _nameController = TextEditingController(
+        text: r?.name ?? (p.userEmail.isEmpty ? '' : p.userName));
+    _commentController = TextEditingController(text: r?.comment ?? '');
+    _stars = r?.rating ?? 0;
+    _recommends = r?.recommends ?? true;
   }
 
   @override
@@ -36,30 +50,51 @@ class _ReviewScreenState extends State<ReviewScreen> {
     super.dispose();
   }
 
-  void _submit(Movie movie) {
+  void _submit() {
     // validate() runs every validator; true only if all pass.
-    if (_formKey.currentState!.validate()) {
-      context.read<MovieProvider>().addReview(
-            Review(
-              movieId: movie.id,
-              name: _nameController.text.trim(),
-              rating: _stars,
-              comment: _commentController.text.trim(),
-              recommends: _recommends,
-            ),
-          );
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('Review added. Thank you!')));
-      Navigator.pop(context);
+    if (!_formKey.currentState!.validate()) return;
+    final p = context.read<MovieProvider>();
+    final name = _nameController.text.trim();
+    final comment = _commentController.text.trim();
+
+    if (_existing == null) {
+      p.addReview(
+        movieId: widget.movieId,
+        name: name,
+        rating: _stars,
+        comment: comment,
+        recommends: _recommends,
+      );
+    } else {
+      p.updateReview(
+        _existing!.id,
+        name: name,
+        rating: _stars,
+        comment: comment,
+        recommends: _recommends,
+      );
     }
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content:
+            Text(_existing == null ? 'Review added. Thank you!' : 'Review updated.')));
+    Navigator.pop(context);
   }
 
   @override
   Widget build(BuildContext context) {
-    final movie = ModalRoute.of(context)!.settings.arguments as Movie;
+    final movie = context.watch<MovieProvider>().movieById(widget.movieId);
+    if (movie == null) {
+      return const NotFoundScreen(message: 'This movie does not exist.');
+    }
+    if (_blocked) {
+      return const NotFoundScreen(
+          message: 'This review was not found, or it is not yours to edit.');
+    }
+    final editing = _existing != null;
 
     return Scaffold(
-      appBar: AppBar(title: Text('Review: ${movie.title}')),
+      appBar: AppBar(
+          title: Text(editing ? 'Edit review: ${movie.title}' : 'Review: ${movie.title}')),
       body: Center(
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 520),
@@ -84,6 +119,7 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 const Text('Your rating (1 to 5 stars)',
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 StarPicker(
+                  initial: _stars,
                   onChanged: (v) => _stars = v,
                   validator: (v) =>
                       (v == null || v == 0) ? 'Please select a star rating' : null,
@@ -108,9 +144,9 @@ class _ReviewScreenState extends State<ReviewScreen> {
                 ),
                 const SizedBox(height: 16),
                 ElevatedButton.icon(
-                  onPressed: () => _submit(movie),
-                  icon: const Icon(Icons.send),
-                  label: const Text('Submit Review'),
+                  onPressed: _submit,
+                  icon: Icon(editing ? Icons.save : Icons.send),
+                  label: Text(editing ? 'Save Changes' : 'Submit Review'),
                 ),
               ],
             ),
