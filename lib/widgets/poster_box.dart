@@ -1,3 +1,4 @@
+import '../data/poster_urls.dart';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../models/movie.dart';
