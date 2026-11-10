@@ -16,6 +16,18 @@ const Map<int, String> _posters = {
   10: '$_base/lv5xShBIDboIhSWCaVMnPlhcPFh.jpg', // Gone Girl
   11: '$_base/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg', // Forrest Gump
   12: '$_base/uluhlXubGu1VxU63X9VHCLWDAYP.jpg', // The Hangover
+    13: '$_base/f89U3ADr1oiB1s9GkdPOEpXUk5H.jpg', // The Matrix
+  14: '$_base/ty8TGRuvJLPUmAR1H1nRIsgwvim.jpg', // Gladiator
+  15: '$_base/sKCr78MXSLixwmZ8DyJLrpMsd15.jpg', // The Lion King
+  16: '$_base/9xjZS2rlVxm8SFx8kPC3aIGCOYQ.jpg', // Titanic
+  17: '$_base/d5iIlFn5s0ImszYzBPb8JPIfbXD.jpg', // Pulp Fiction
+  18: '$_base/6oom5QYQ2yw27p5ZlcpYE2SBPaA.jpg', // Fellowship of the Ring
+  19: '$_base/tFXcEccSQMf3lfhfXKSU9iRBpa3.jpg', // Get Out
+  20: '$_base/3bhkrj58Vtu7enYsRolD1fZdja1.jpg', // The Godfather
+  21: '$_base/or06FN3Dka5tukK1e9sl16pB3iy.jpg', // Avengers: Endgame
+  22: '$_base/uDO8zWDhfWwoFdKS4fzkUJt0Rf0.jpg', // La La Land
+  23: '$_base/gGEsBPAijhVUFoiNpgZXqRVWJt2.jpg', // Coco
+  24: '$_base/udDclJoHjfjb8Ekgsd4FDteOkCU.jpg', // Joker
 };
 
 // A poster the user typed in the Edit form wins; otherwise use the list above.
