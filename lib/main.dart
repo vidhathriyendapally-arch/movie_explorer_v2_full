@@ -1,3 +1,4 @@
+import 'theme/polish.dart';
 import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,8 +48,8 @@ class MovieExplorerApp extends StatelessWidget {
       title: 'Movie Explorer',
       debugShowCheckedModeBanner: false,
       scrollBehavior: AppScrollBehavior(),
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
+      theme: PolishedTheme.light,
+darkTheme: PolishedTheme.dark,
       themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
       // Named routes (fixed pages)
       routes: {
