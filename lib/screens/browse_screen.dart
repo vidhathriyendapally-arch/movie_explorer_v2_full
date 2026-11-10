@@ -122,8 +122,13 @@ class _BrowseScreenState extends State<BrowseScreen> {
                       if (v != null) p.setSort(v);
                     },
                   ),
-                  Text('${movies.length} movies',
+                                    Text('${movies.length} movies',
                       style: TextStyle(color: AppTheme.mutedText(context))),
+                  ElevatedButton.icon(
+                    onPressed: () => Navigator.pushNamed(context, '/add-movie'),
+                    icon: const Icon(Icons.add),
+                    label: const Text('Add movie'),
+                  ),
                 ],
               ),
             ],
